@@ -1,0 +1,245 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "accounts_dannuza_m_8501_resource_name": {
+            "defaultValue": "dannuza-m-8501-resource",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2025-04-01-preview",
+            "name": "[parameters('accounts_dannuza_m_8501_resource_name')]",
+            "location": "eastus2",
+            "sku": {
+                "name": "S0"
+            },
+            "kind": "AIServices",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "apiProperties": {},
+                "customSubDomainName": "[parameters('accounts_dannuza_m_8501_resource_name')]",
+                "networkAcls": {
+                    "defaultAction": "Allow",
+                    "virtualNetworkRules": [],
+                    "ipRules": []
+                },
+                "allowProjectManagement": true,
+                "defaultProject": "dannuza_m-8501",
+                "associatedProjects": [
+                    "dannuza_m-8501"
+                ],
+                "publicNetworkAccess": "Enabled",
+                "disableLocalAuth": false
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/defenderForAISettings",
+            "apiVersion": "2025-04-01-preview",
+            "name": "[concat(parameters('accounts_dannuza_m_8501_resource_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_dannuza_m_8501_resource_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/deployments",
+            "apiVersion": "2025-04-01-preview",
+            "name": "[concat(parameters('accounts_dannuza_m_8501_resource_name'), '/gpt-4o')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_dannuza_m_8501_resource_name'))]"
+            ],
+            "sku": {
+                "name": "GlobalStandard",
+                "capacity": 50
+            },
+            "properties": {
+                "model": {
+                    "format": "OpenAI",
+                    "name": "gpt-4o",
+                    "version": "2024-11-20"
+                },
+                "versionUpgradeOption": "OnceNewDefaultVersionAvailable",
+                "currentCapacity": 50,
+                "raiPolicyName": "Microsoft.DefaultV2"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/projects",
+            "apiVersion": "2025-04-01-preview",
+            "name": "[concat(parameters('accounts_dannuza_m_8501_resource_name'), '/dannuza_m-8501')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_dannuza_m_8501_resource_name'))]"
+            ],
+            "kind": "AIServices",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/raiPolicies",
+            "apiVersion": "2025-04-01-preview",
+            "name": "[concat(parameters('accounts_dannuza_m_8501_resource_name'), '/Microsoft.Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_dannuza_m_8501_resource_name'))]"
+            ],
+            "properties": {
+                "mode": "Blocking",
+                "contentFilters": [
+                    {
+                        "name": "Hate",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Hate",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Sexual",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Sexual",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Violence",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Violence",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Selfharm",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Selfharm",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts/raiPolicies",
+            "apiVersion": "2025-04-01-preview",
+            "name": "[concat(parameters('accounts_dannuza_m_8501_resource_name'), '/Microsoft.DefaultV2')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.CognitiveServices/accounts', parameters('accounts_dannuza_m_8501_resource_name'))]"
+            ],
+            "properties": {
+                "mode": "Blocking",
+                "contentFilters": [
+                    {
+                        "name": "Hate",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Hate",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Sexual",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Sexual",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Violence",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Violence",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Selfharm",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Selfharm",
+                        "severityThreshold": "Medium",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Jailbreak",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Prompt"
+                    },
+                    {
+                        "name": "Protected Material Text",
+                        "blocking": true,
+                        "enabled": true,
+                        "source": "Completion"
+                    },
+                    {
+                        "name": "Protected Material Code",
+                        "blocking": false,
+                        "enabled": true,
+                        "source": "Completion"
+                    }
+                ]
+            }
+        }
+    ]
+}
